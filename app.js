@@ -1,4 +1,4 @@
-angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "firebase"])
+angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "firebase"])
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
@@ -22,10 +22,22 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			templateUrl: "/emailpass/emailpass.html",
 			controller: "empCtrl"
 		})
-		.when("/popup", {
+		.when("/google", {
 			templateUrl: "/google/google.html",
 			controller: "googleCtrl"
 		})
+		.when("/facebook", {
+			templateUrl: "/facebook/facebook.html",
+			controller: "facebookCtrl"
+		})
+		.when("/twitter", {
+			templateUrl: "/twitter/twitter.html",
+			controller: "twitterCtrl"
+		})
+		.when("/github", {
+			templateUrl: "/github/github.html",
+			controller: "githubCtrl"
+		})	
 }])
 .controller("fireCtrl", ["$scope", "authFire", function($scope, authFire){
 	$scope.authFire = authFire;
