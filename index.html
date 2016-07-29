@@ -38,15 +38,15 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Google <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a>Popup</a></li>
-                            <li><a>Redirect</a></li>
-                        	<li><a>OAuth Credentials</a></li>
+                            <li><a href="#/popup">Popup</a></li>
+                            <li><a href="#/popup">Redirect</a></li>
+                        	<li><a href="#/popup">OAuth Credentials</a></li>
                         </ul>
 					</li>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true">Facebook <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a>Popup</a></li>
+                            <li><a >Popup</a></li>
                             <li><a>Redirect</a></li>
                         	<li><a>OAuth Credentials</a></li>
                         </ul>
@@ -80,12 +80,13 @@
 		<hr>
 		<div class="container">
 			<div >
-			<button class="btn btn-primary" ng-show="user" ng-click="authFire.$signOut()" >Sign Out</button>
+			<button class="btn btn-primary btn-lg" ng-if="user" ng-click="authFire.$signOut()" >Sign Out</button>
 			</div>
 		</div>
 		<script src="app.js"></script>
 		<script src="anonymous/anon.js"></script>
 		<script src="emailpass/emailpass.js"></script>
+		<script src="google/google.js"></script>
 	
 	</body>
 

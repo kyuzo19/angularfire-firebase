@@ -1,4 +1,4 @@
-angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "firebase"])
+angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "firebase"])
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
@@ -22,12 +22,16 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "firebase"])
 			templateUrl: "/emailpass/emailpass.html",
 			controller: "empCtrl"
 		})
+		.when("/popup", {
+			templateUrl: "/google/google.html",
+			controller: "googleCtrl"
+		})
 }])
 .controller("fireCtrl", ["$scope", "authFire", function($scope, authFire){
 	$scope.authFire = authFire;
 	authFire.$onAuthStateChanged(function(user){
 			if(user){
-				console.log("on auth changed user id: " + user.id);
+				console.log("onauthchanged user id: " + user.uid);
 			} else {
 				console.log("Signed Out")
 			}
