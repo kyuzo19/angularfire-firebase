@@ -42,12 +42,33 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 .controller("fireCtrl", ["$scope", "authFire", function($scope, authFire){
 	$scope.authFire = authFire;
 	authFire.$onAuthStateChanged(function(user){
-			if(user){
-				console.log("onauthchanged user id: " + user.uid);
-			} else {
-				console.log("Signed Out")
-			}
+		
+		if(user){
+			var displayName = user.displayName;
+			var email = user.email;
+			var emailVerified = user.emailVerified;
+			var isAnonymous = user.isAnonymous;
+			var photoUrl = user.photoUrl;
+			var providerData = user.providerData;
+			var providerId = user.providerId;
+			var uid = user.uid;
+			console.log("onauthchanged user id: " + user.uid);
+			$scope.jason = JSON.stringify({
+				userdisplayname: displayName,
+				useremail: email,
+				useremailverified: emailVerified,
+				useranonymous: isAnonymous,
+				userphotourl: photoUrl,
+				userproviderdata: providerData,
+				userproviderid: providerId,
+				userid: uid
+			})
+		} else {
+			console.log("Signed Out");
+			$scope.jason = null;
+		}
 		$scope.user = user;
+		
 		});
 	
 
