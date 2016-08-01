@@ -1,4 +1,4 @@
-angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "firebase"])
+angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "database", "firebase"])
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
@@ -38,6 +38,10 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			templateUrl: "/github/github.html",
 			controller: "githubCtrl"
 		})	
+		.when("/database", {
+			templateUrl: "/database/database.html",
+			controller: "dataCtrl"
+		})
 }])
 .controller("fireCtrl", ["$scope", "authFire", function($scope, authFire){
 	$scope.authFire = authFire;
