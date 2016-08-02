@@ -2,6 +2,10 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
+/*.factory("dataFire", ["$firebaseArray", "authFire", function($firebaseArray, authFire){
+	var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
+	return $firebaseArray(ref);
+}])*/
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -72,6 +76,7 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			$scope.jason = null;
 		}
 		$scope.user = user;
+		$scope.userid = user.uid;
 		
 		});
 	
