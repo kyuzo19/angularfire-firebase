@@ -2,10 +2,10 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
-/*.factory("dataFire", ["$firebaseArray", "authFire", function($firebaseArray, authFire){
+.factory("dataFire", ["$firebaseArray", "authFire", function($firebaseArray, authFire){
 	var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
 	return $firebaseArray(ref);
-}])*/
+}])
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -47,11 +47,13 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			controller: "dataCtrl"
 		})
 }])
-.controller("fireCtrl", ["$scope", "authFire", function($scope, authFire){
+.controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", function($scope, authFire, $firebaseObject){
 	$scope.authFire = authFire;
 	authFire.$onAuthStateChanged(function(user){
 		
 		if(user){
+			var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
+			var user = $firebaseObject(ref);
 			var displayName = user.displayName;
 			var email = user.email;
 			var emailVerified = user.emailVerified;
@@ -70,13 +72,22 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 				userproviderdata: providerData,
 				userproviderid: providerId,
 				userid: uid
-			})
+			});
+			if(!displayName){
+				displayName = "No displayname or username";	
+			}
+			user.username = displayName;
+			user.email = email;
+			user.$save().then(function(ref){
+				console.log("user id added to database: " + ref.key);
+			}, function(err){
+			console.log(err)})
+			
 		} else {
 			console.log("Signed Out");
 			$scope.jason = null;
 		}
 		$scope.user = user;
-		$scope.userid = user.uid;
 		
 		});
 	
