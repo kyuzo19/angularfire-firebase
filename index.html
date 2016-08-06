@@ -79,14 +79,14 @@
 			<div ng-view></div>
 		</div>
 		<hr>
-	
+<!--retrieves current authenticated user	-->
 		<div class="container">
 			<pre><code>{{jason}}</code></pre>
 			<div >
 			<button class="btn btn-primary btn-lg" ng-if="user" ng-click="authFire.$signOut()" >Sign Out</button>
 			</div>
 		</div>
-		
+
 		<script src="app.js"></script>
 		<script src="anonymous/anon.js"></script>
 		<script src="emailpass/emailpass.js"></script>

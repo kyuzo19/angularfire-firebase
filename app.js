@@ -2,10 +2,10 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
-.factory("dataFire", ["$firebaseArray", "authFire", function($firebaseArray, authFire){
+/*.factory("dataFire", ["$firebaseArray", "authFire", function($firebaseArray, authFire){
 	var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
 	return $firebaseArray(ref);
-}])
+}])*/
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -47,13 +47,13 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			controller: "dataCtrl"
 		})
 }])
-.controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", function($scope, authFire, $firebaseObject){
+.controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", "$firebaseArray", function($scope, authFire, $firebaseObject, $firebaseArray){
 	$scope.authFire = authFire;
+	var postRef = firebase.database().ref("posts");
+	var post = $firebaseArray(postRef);
+	$scope.posts = post;
 	authFire.$onAuthStateChanged(function(user){
-		
 		if(user){
-			var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
-			var user = $firebaseObject(ref);
 			var displayName = user.displayName;
 			var email = user.email;
 			var emailVerified = user.emailVerified;
@@ -75,7 +75,10 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			});
 			if(!displayName){
 				displayName = "No displayname or username";	
-			}
+			};
+/*starts add current user's username and email to database*/
+ 			var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
+			var user = $firebaseObject(ref);
 			user.username = displayName;
 			user.email = email;
 			user.$save().then(function(ref){
@@ -86,7 +89,8 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 		} else {
 			console.log("Signed Out");
 			$scope.jason = null;
-		}
+		};
+/*end add current user's username and email to database*/
 		$scope.user = user;
 		
 		});
