@@ -1,18 +1,18 @@
 angular.module("database", [])
-.controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", function($scope, $firebaseArray, $firebaseObject){
+.controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", "dataFire", function($scope, $firebaseArray, $firebaseObject, dataFire){
 	
 	$scope.submitPost = function(){
 /*add post and user's post to database*/
-		var postRef = firebase.database().ref("posts");
-		var post = $firebaseArray(postRef);
+		var post = $firebaseArray(dataFire.postRef);
 		post.$add({
 			title: $scope.title,
 			body: $scope.message
 		}).then(function(ref){
 /*add user's post to database*/
+			
 			console.log("added post successfull" );
-			var postRefuser = firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid + "/" + ref.key);
-			var postUser = $firebaseObject(postRefuser);
+			
+			var postUser = $firebaseObject(dataFire.userPostRef($scope.userid, ref.key));
 			postUser.title = $scope.title;
 			postUser.message = $scope.message;
 			postUser.$save().then(function(ref){

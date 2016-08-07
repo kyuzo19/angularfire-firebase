@@ -2,10 +2,24 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 .factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
 			return $firebaseAuth();		  
 }])
-/*.factory("dataFire", ["$firebaseArray", "authFire", function($firebaseArray, authFire){
-	var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
-	return $firebaseArray(ref);
-}])*/
+.factory("dataFire", [function(){
+
+	var postRef = firebase.database().ref("posts");
+	var userIdRef = function (userid){
+		var ref = firebase.database().ref("user/" + userid);
+		return ref;
+	};
+	var userPostRef = function(userid, userpostkey){
+		var ref = firebase.database().ref("user-posts/" + userid + "/" + userpostkey);
+		return ref;
+	};
+	
+	return {
+		postRef: postRef,
+		userPostRef: userPostRef,
+		userIdRef: userIdRef
+	}
+}])
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -47,13 +61,14 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			controller: "dataCtrl"
 		})
 }])
-.controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", "$firebaseArray", function($scope, authFire, $firebaseObject, $firebaseArray){
+.controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", "$firebaseArray", "dataFire", function($scope, authFire, $firebaseObject, $firebaseArray, dataFire){
 	$scope.authFire = authFire;
 	var postRef = firebase.database().ref("posts");
 	var post = $firebaseArray(postRef);
 	$scope.posts = post;
 	authFire.$onAuthStateChanged(function(user){
 		if(user){
+			$scope.userid = firebase.auth().currentUser.uid;
 			var displayName = user.displayName;
 			var email = user.email;
 			var emailVerified = user.emailVerified;
@@ -77,8 +92,7 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 				displayName = "No displayname or username";	
 			};
 /*starts add current user's username and email to database*/
- 			var ref = firebase.database().ref("users/" + firebase.auth().currentUser.uid);
-			var user = $firebaseObject(ref);
+			var user = $firebaseObject(dataFire.userIdRef(uid));
 			user.username = displayName;
 			user.email = email;
 			user.$save().then(function(ref){
