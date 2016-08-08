@@ -1,23 +1,50 @@
-<!--show post form-->
 <div class="row">
-	 <div class="col-md-4" ng-hide="showForm">
-		<form role="form" ng-submit="submitPost()">
-			<div class="form-group">
-				<label for="title">Title:</label>
-			<input type="text" class="form-control" id="title" ng-model="title">
-			</div>
-			<div class="form-group">
-				<label for="message">Message:</label>
-				<textarea class="form-control" id="message" rows="3" ng-model="message"></textarea>
-			</div>
-			<button type="submit" class="btn btn default">Add Post</button>
-		</form>	
+	<div class="col-md-3 sidenav">
+    <h4>Firebase's posts</h4>
+		<ul class="nav nav-pills nav-stacked">
+			<li><a ng-click="">Recent Post</a></li>
+      		<li><a ng-click="myPost()">My Posts</a></li>	
+		</ul><br>
+    	<button class="btn btn-primary" ng-click="addPost()">
+			<span class="glyphicon glyphicon-plus"></span> Post	
+		</button>
 	</div>
-</div>
+	<div class="col-md-9">
+<!--post form-->
+		<div ng-show="postForm">
+				<form role="form" ng-submit="submitPost()">
+					<div class="form-group">
+						<label for="title">Title:</label>
+						<input type="text" class="form-control" id="title" ng-model="title">
+					</div>
+					<div class="form-group">
+						<label for="message">Message:</label>
+						<textarea class="form-control" id="message" rows="3" ng-model="message"></textarea>
+					</div>
+					<button type="submit" class="btn btn default">Add Post</button>
+				</form>	
+		</div>
 <!--recent posts-->
-<div class="row">
-	<div class="col-md-3" ng-repeat="post in posts">
-		<p>{{post.title}}</p>
-		<textarea>{{post.body}}</textarea>
+		<div ng-hide="recentPosts">
+			<h2>Most Recent Post</h2>
+			<hr>
+			<div ng-repeat="post in posts.slice((posts.length - 5), posts.length)">
+				<h3>{{post.title}}</h3>
+				<p>{{post.body}}</p>
+				<hr>
+				
+			</div>
+		</div>
+<!--my posts-->
+		<div ng-show="myPosts">
+			<h2>My posts</h2>
+			<hr>
+			<div ng-repeat="userpost in userposts">
+				<h3>{{userpost.title}}</h3>
+				<p>{{userpost.message}}</p>
+				
+			</div>
+
+		</div>
 	</div>
 </div>	

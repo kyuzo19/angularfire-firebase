@@ -6,7 +6,7 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 
 	var postRef = firebase.database().ref("posts");
 	var userIdRef = function (userid){
-		var ref = firebase.database().ref("user/" + userid);
+		var ref = firebase.database().ref("users/" + userid);
 		return ref;
 	};
 	var userPostRef = function(userid, userpostkey){
@@ -63,12 +63,22 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 }])
 .controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", "$firebaseArray", "dataFire", function($scope, authFire, $firebaseObject, $firebaseArray, dataFire){
 	$scope.authFire = authFire;
-	var postRef = firebase.database().ref("posts");
-	var post = $firebaseArray(postRef);
-	$scope.posts = post;
+
 	authFire.$onAuthStateChanged(function(user){
 		if(user){
 			$scope.userid = firebase.auth().currentUser.uid;
+			$scope.posts = $firebaseArray(dataFire.postRef);
+			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
+			userposts.$loaded().then(function(userposts){
+				console.log("loaded record: " + userposts.$id, userposts.title);
+				angular.forEach(userposts, function(value, key) {
+          			console.log("key:" + key);
+					console.log("value title:" + value.title);
+					console.log("value message:" + value.message);
+				});
+			});
+			$scope.userposts = userposts;
+			$scope.test = userposts;
 			var displayName = user.displayName;
 			var email = user.email;
 			var emailVerified = user.emailVerified;
