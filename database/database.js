@@ -30,17 +30,22 @@ angular.module("database", [])
 /*add post and user's post to database*/
 	};
 	
-	$scope.recentPost = function(){
-		
+	$scope.recentPosts = function(){
+		$scope.postForm = 0;
+		$scope.recentPost = 0;
+		$scope.myPosts = 0;
 	};
 	
 	$scope.myPost = function(){
 		$scope.myPosts = 1;
+		$scope.postForm = 0;
+		$scope.recentPost = 1;
 	};
 	
 	$scope.addPost = function(){
 		$scope.postForm = 1;
-		$scope.recentPosts = 1;
+		$scope.recentPost = 1;
+		$scope.myPosts = 0; 
 	}
 }]);
 	
