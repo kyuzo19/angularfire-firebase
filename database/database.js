@@ -3,15 +3,13 @@ angular.module("database", [])
 	
 	$scope.submitPost = function(){
 /*add post and user's post to database*/
-		$scope.postForm = 0;
-		$scope.recentPosts = 0;
+		$scope.postForm = $scope.recentPost = 0;
 		var post = $firebaseArray(dataFire.postRef);
 		post.$add({
 			title: $scope.title,
-			body: $scope.message
+			body: $scope.message	
 		}).then(function(ref){
 /*add user's post to database*/
-			
 			console.log("added post successfull" );
 			
 			var postUser = $firebaseObject(dataFire.userPostRef($scope.userid, ref.key));
@@ -31,20 +29,16 @@ angular.module("database", [])
 	};
 	
 	$scope.recentPosts = function(){
-		$scope.postForm = 0;
-		$scope.recentPost = 0;
-		$scope.myPosts = 0;
+		$scope.postForm = $scope.recentPost = $scope.myPosts = 0;
 	};
 	
 	$scope.myPost = function(){
-		$scope.myPosts = 1;
+		$scope.myPosts = $scope.recentPost = 1;
 		$scope.postForm = 0;
-		$scope.recentPost = 1;
 	};
 	
 	$scope.addPost = function(){
-		$scope.postForm = 1;
-		$scope.recentPost = 1;
+		$scope.postForm = $scope.recentPost = 1;
 		$scope.myPosts = 0; 
 	}
 }]);
