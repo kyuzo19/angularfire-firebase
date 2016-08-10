@@ -1,8 +1,8 @@
 angular.module("facebookSignin", [])
-.controller("facebookCtrl", ["$scope", "authFire", function($scope, authFire){
+.controller("facebookCtrl", ["$scope", function($scope){
 	$scope.facebookPopup = function(){
 		
-		authFire.$signInWithPopup("facebook").then(function(result){
+		$scope.authFire.$signInWithPopup("facebook").then(function(result){
 			console.log("Logged in as: " + result.user.uid);
 		}).catch(function(error){
 				console.log(error);
@@ -12,7 +12,7 @@ angular.module("facebookSignin", [])
 	
 	$scope.facebookRedirect = function(){
 		
-		authFire.$signInWithRedirect("facebook").then(function(result){
+		$scope.authFire.$signInWithRedirect("facebook").then(function(result){
 			console.log("Logged in: " + result.user.uid) 
 		}).catch(function(error){
 			console.log(error);

@@ -1,10 +1,7 @@
 angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "database", "firebase"])
-.factory("authFire", ["$firebaseAuth", function ($firebaseAuth) {
-			return $firebaseAuth();		  
-}])
 .factory("dataFire", [function(){
 
-	var postRef = firebase.database().ref("posts");
+	var postRef = firebase.database().ref("posts"); 
 	var userIdRef = function (userid){
 		var ref = firebase.database().ref("users/" + userid);
 		return ref;
@@ -61,24 +58,26 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			controller: "dataCtrl"
 		})
 }])
-.controller("fireCtrl", ["$scope", "authFire", "$firebaseObject", "$firebaseArray", "dataFire", function($scope, authFire, $firebaseObject, $firebaseArray, dataFire){
-	$scope.authFire = authFire;
-
-	authFire.$onAuthStateChanged(function(user){
+.controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "dataFire", "$firebaseAuth", function($scope, $firebaseObject, $firebaseArray, dataFire, $firebaseAuth){
+	$scope.authFire = $firebaseAuth();
+/*listen to client's auth state*/
+	$firebaseAuth().$onAuthStateChanged(function(user){
 		if(user){
 			$scope.userid = firebase.auth().currentUser.uid;
 			$scope.posts = $firebaseArray(dataFire.postRef);
+/*user's posts*/
 			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
 			userposts.$loaded().then(function(userposts){
 				console.log("loaded record: " + userposts.$id, userposts.title);
+				});
 				angular.forEach(userposts, function(value, key) {
           			console.log("key:" + key);
 					console.log("value title:" + value.title);
 					console.log("value message:" + value.message);
-				});
+					
 			});
 			$scope.userposts = userposts;
-			$scope.test = userposts;
+/*end user's posts*/
 			var displayName = user.displayName;
 			var email = user.email;
 			var emailVerified = user.emailVerified;
@@ -87,6 +86,8 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			var providerData = user.providerData;
 			var providerId = user.providerId;
 			var uid = user.uid;
+			/*author*/
+			$scope.author =  user.providerData[0].displayName;
 			console.log("onauthchanged user id: " + user.uid);
 			$scope.jason = JSON.stringify({
 				userdisplayname: displayName,
@@ -118,6 +119,7 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 		$scope.user = user;
 		
 		});
+/*end listen to client's auth state*/
 	
 
 	

@@ -1,10 +1,10 @@
 angular.module("empSignin", [])
-.controller("empCtrl", ["$scope", "authFire", function($scope, authFire){
+.controller("empCtrl", ["$scope", function($scope){
 	
 	$scope.signIn = function(){
 		email = $scope.email;
 		password = $scope.password;
-		authFire.$signInWithEmailAndPassword(email,password).then(function(user){
+		$scope.authFire.$signInWithEmailAndPassword(email,password).then(function(user){
 		console.log("success");
 	}).catch(function(error){
 		console.log(error);
@@ -15,7 +15,7 @@ angular.module("empSignin", [])
 	$scope.signUp = function(){
 		email = $scope.email;
 		password = $scope.password;
-		authFire.$createUserWithEmailAndPassword(email,password).then(function(user){
+		$scope.authFire.$createUserWithEmailAndPassword(email,password).then(function(user){
 			console.log("sign up success");
 		}).catch(function (error){
 			console.log(error);

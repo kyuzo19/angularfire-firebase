@@ -1,16 +1,16 @@
 angular.module("googleSignin",[])
-.controller("googleCtrl", ["$scope", "authFire", function($scope,authFire){
+.controller("googleCtrl", ["$scope", function($scope){
 	$scope.googlePopUp = function(){
 		//optional 
 		/*var provider = new firebase.auth.GoogleAuthProvider();*/
-		authFire.$signInWithPopup("google").then(function(result){
+		$scope.authFire.$signInWithPopup("google").then(function(result){
 			console.log("Sign in as: " + result.user.uid)
 		}).catch(function(error){
 			console.log(error);
 		})
 	};	
 	$scope.googleRedirect = function(){
-		authFire.$signInWithRedirect("google").catch(function(error){
+		$scope.authFire.$signInWithRedirect("google").catch(function(error){
 			console.log(error);
 		})
 	};
