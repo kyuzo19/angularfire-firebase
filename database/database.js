@@ -1,11 +1,10 @@
 angular.module("database", [])
 .controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", "dataFire", function($scope, $firebaseArray, $firebaseObject, dataFire){
-	
+	var post = $firebaseArray(dataFire.postRef);
+	$scope.post = post;
 	$scope.submitPost = function(){
 /*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
-		var post = $firebaseArray(dataFire.postRef);
-		$scope.post = post;
 		post.$add({
 			title: $scope.title,
 			body: $scope.message,
@@ -25,9 +24,9 @@ angular.module("database", [])
 			}).catch(function(err){
 				console.log(err)
 			});
-/*add user's post to database*/		
+/*end add user's post to database*/		
 		});
-/*add post and user's post to database*/
+/*end add post and user's post to database*/
 	};
 	
 	$scope.recentPosts = function(){

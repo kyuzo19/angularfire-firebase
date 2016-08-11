@@ -81,17 +81,18 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
 			userposts.$loaded().then(function(userposts){
 				console.log("loaded record: " + userposts.$id, userposts.title);
-				});
-				angular.forEach(userposts, function(value, key) {
-          			console.log("key:" + key);
-					console.log("value title:" + value.title);
-					console.log("value message:" + value.message);
-					
-			});
+				});			
+/*Iteration through userposts Object $firebaseObject*/
+			angular.forEach(userposts, function(value, key) {
+          		console.log("key:" + key);
+				console.log("value title:" + value.title);
+				console.log("value message:" + value.message);
+			});			
+/*End of Iteration*/
 			$scope.userposts = userposts;
 /*end user's posts*/
 			var displayName = user.displayName;
-			var email = user.email;
+			var email = user.email
 			var emailVerified = user.emailVerified;
 			var isAnonymous = user.isAnonymous;
 			var photoUrl = user.photoUrl;
