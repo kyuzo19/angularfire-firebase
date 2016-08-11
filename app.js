@@ -17,6 +17,16 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 		userIdRef: userIdRef
 	}
 }])
+.factory("arrPosts", ["$firebaseArray", "dataFire", function($firebaseArray, dataFire){
+	var slicePost = $firebaseArray(dataFire.postRef);
+	var arr;
+	if (slicePost.length < 5){
+		arr = slicePost;
+	} else {
+		arr = slicePost.slice((slicePost.lenght - 5 ), slicePost.length);
+	}
+	return arr;
+}])
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -58,13 +68,15 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			controller: "dataCtrl"
 		})
 }])
-.controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "dataFire", "$firebaseAuth", function($scope, $firebaseObject, $firebaseArray, dataFire, $firebaseAuth){
+.controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "dataFire", "$firebaseAuth", "arrPosts", function($scope, $firebaseObject, $firebaseArray, dataFire, $firebaseAuth, arrPosts){
 	$scope.authFire = $firebaseAuth();
 /*listen to client's auth state*/
 	$firebaseAuth().$onAuthStateChanged(function(user){
 		if(user){
 			$scope.userid = firebase.auth().currentUser.uid;
 			$scope.posts = $firebaseArray(dataFire.postRef);
+/*array of posts*/
+			$scope.slicePost = arrPosts;
 /*user's posts*/
 			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
 			userposts.$loaded().then(function(userposts){

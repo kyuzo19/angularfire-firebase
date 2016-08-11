@@ -5,7 +5,7 @@ angular.module("database", [])
 /*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
 		var post = $firebaseArray(dataFire.postRef);
-		$scope.post;
+		$scope.post = post;
 		post.$add({
 			title: $scope.title,
 			body: $scope.message,
@@ -45,9 +45,13 @@ angular.module("database", [])
 	}
 	
 	$scope.deletePost = function(key){
-		delete $scope.userposts[key];
-			$scope.userposts.$save();
 		
+		delete $scope.userposts[key];
+		$scope.userposts.$save();
+		var ind = $scope.post.$indexFor(key);
+		$scope.post.$remove(ind).then(function(ref){
+			console.log("remove successful")
+		})
 	}
 }]);
 	
