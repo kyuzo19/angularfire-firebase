@@ -1,22 +1,22 @@
 angular.module("database", [])
-.controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", "dataFire", function($scope, $firebaseArray, $firebaseObject, dataFire){
-	var post = $firebaseArray(dataFire.postRef);
-	$scope.post = post;
+.controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", function($scope, $firebaseArray, $firebaseObject){
+	
 	$scope.submitPost = function(){
 /*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
-		post.$add({
+		$scope.posts.$add({
 			title: $scope.title,
 			body: $scope.message,
-			uid: $scope.userid,
+			uid: $scope.currentUserId,
 			author: $scope.author
 		}).then(function(ref){
-/*add user's post to database*/
-			console.log("added post successfull" );
-			var postUser = $firebaseObject(dataFire.userPostRef($scope.userid, ref.key));
-			postUser.title = $scope.title;
-			postUser.message = $scope.message;
-			postUser.$save().then(function(ref){
+/*add or write user's post to database*/
+			var userPostsRef = firebase.database().ref("user-posts/" + $scope.currentUserId + "/" + ref.key)
+			var userPosts = $firebaseObject(userPostsRef);
+			$scope.userPosts = userPosts;
+			userPosts.title = $scope.title;
+			userPosts.message = $scope.message;
+			userPosts.$save().then(function(ref){
 				console.log("added post to user success")
 				$scope.title = "";
 				$scope.message = "";
@@ -44,11 +44,12 @@ angular.module("database", [])
 	}
 	
 	$scope.deletePost = function(key){
-		
+/*delete from user's post*/
 		delete $scope.userposts[key];
 		$scope.userposts.$save();
-		var ind = $scope.post.$indexFor(key);
-		$scope.post.$remove(ind).then(function(ref){
+/*delete from posts*/
+		var ind = $scope.posts.$indexFor(key);
+		$scope.posts.$remove(ind).then(function(ref){
 			console.log("remove successful")
 		})
 	}
