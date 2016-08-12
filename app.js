@@ -1,32 +1,4 @@
 angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "database", "firebase"])
-.factory("dataFire", [function(){
-
-	var postRef = firebase.database().ref("posts"); 
-	var userIdRef = function (userid){
-		var ref = firebase.database().ref("users/" + userid);
-		return ref;
-	};
-	var userPostRef = function(userid, userpostkey){
-		var ref = firebase.database().ref("user-posts/" + userid + "/" + userpostkey);
-		return ref;
-	};
-	
-	return {
-		postRef: postRef,
-		userPostRef: userPostRef,
-		userIdRef: userIdRef
-	}
-}])
-.factory("arrPosts", ["$firebaseArray", "dataFire", function($firebaseArray, dataFire){
-	var slicePost = $firebaseArray(dataFire.postRef);
-	var arr;
-	if (slicePost.length < 5){
-		arr = slicePost;
-	} else {
-		arr = slicePost.slice((slicePost.lenght - 5 ), slicePost.length);
-	}
-	return arr;
-}])
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -68,29 +40,14 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			controller: "dataCtrl"
 		})
 }])
-.controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "dataFire", "$firebaseAuth", "arrPosts", function($scope, $firebaseObject, $firebaseArray, dataFire, $firebaseAuth, arrPosts){
+.controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "$firebaseAuth", function($scope, $firebaseObject, $firebaseArray, $firebaseAuth){
+    
 	$scope.authFire = $firebaseAuth();
 /*listen to client's auth state*/
 	$firebaseAuth().$onAuthStateChanged(function(user){
+/*if user is authenticated*/
 		if(user){
-			$scope.userid = firebase.auth().currentUser.uid;
-			$scope.posts = $firebaseArray(dataFire.postRef);
-/*array of posts*/
-			$scope.slicePost = arrPosts;
-/*user's posts*/
-			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
-			userposts.$loaded().then(function(userposts){
-				console.log("loaded record: " + userposts.$id, userposts.title);
-				});			
-/*Iteration through userposts Object $firebaseObject*/
-			angular.forEach(userposts, function(value, key) {
-          		console.log("key:" + key);
-				console.log("value title:" + value.title);
-				console.log("value message:" + value.message);
-			});			
-/*End of Iteration*/
-			$scope.userposts = userposts;
-/*end user's posts*/
+/*authenticated user's details*/
 			var displayName = user.displayName;
 			var email = user.email
 			var emailVerified = user.emailVerified;
@@ -112,18 +69,50 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 				userproviderid: providerId,
 				userid: uid
 			});
+/*end authenticated user's details*/
+            var currentUserId = firebase.auth().currentUser.uid;
+            $scope.currentUserId = currentUserId;
+            var postRef = firebase.database().ref("posts");
+            var userIdRef = firebase.database().ref("users/" + currentUserId);
+            var posts = $firebaseArray(postRef);
+			var userDetails = $firebaseObject(userIdRef);
+			if (posts.length < 5) {
+				return  $scope.posts = posts;	
+			} else {
+				return $scope.posts = posts.slice((posts.length - 5), posts.length);					   
+			};
+			$scope.posts = posts;
+			$scope.userDetails = userDetails;
+ /*add current user's displayname and email to db*/
 			if(!displayName){
 				displayName = "No displayname or username";	
 			};
-/*starts add current user's username and email to database*/
-			var user = $firebaseObject(dataFire.userIdRef(uid));
-			user.username = displayName;
-			user.email = email;
-			user.$save().then(function(ref){
+			userDetails.username = displayName;
+			userDetails.email = email;
+			userDetails.$save().then(function(ref){
 				console.log("user id added to database: " + ref.key);
 			}, function(err){
 			console.log(err)})
+ /* end add user's displayname and email to db*/
+					
+/*read user's posts reference iteration*/
+			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
+			userposts.$loaded().then(function(userposts){
+				console.log("loaded record: " + userposts.$id, userposts.title);
+				});			
+/*Iteration through userposts Object $firebaseObject*/
+			angular.forEach(userposts, function(value, key) {
+          		console.log("key:" + key);
+				console.log("value title:" + value.title);
+				console.log("value message:" + value.message);
+			});			
+/*End of Iteration*/
+			$scope.userposts = userposts;
+/*end user's posts iteration*/
 			
+			
+
+		
 		} else {
 			console.log("Signed Out");
 			$scope.jason = null;
