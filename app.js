@@ -41,10 +41,11 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 		})
 }])
 .controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "$firebaseAuth", function($scope, $firebaseObject, $firebaseArray, $firebaseAuth){
-    
+   
 	$scope.authFire = $firebaseAuth();
 /*listen to client's auth state*/
 	$firebaseAuth().$onAuthStateChanged(function(user){
+		$scope.user = user;
 /*if user is authenticated*/
 		if(user){
 /*authenticated user's details*/
@@ -76,12 +77,21 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
             var userIdRef = firebase.database().ref("users/" + currentUserId);
             var posts = $firebaseArray(postRef);
 			var userDetails = $firebaseObject(userIdRef);
-			if (posts.length < 5) {
-				return  $scope.posts = posts;	
-			} else {
-				return $scope.posts = posts.slice((posts.length - 5), posts.length);					   
-			};
+			posts.$loaded().then(function(arr){
+				if (arr.length < 5){
+					$scope.posts5 = arr;
+				} else {
+					$scope.posts5 = arr.slice((arr.length - 5), arr.length);
+				};
+				$scope.totalPosts = arr.length;
+				console.log(arr.length);
+			}).catch(function(err){
+				console.log(err);
+			});
+			
 			$scope.posts = posts;
+			
+			
 			$scope.userDetails = userDetails;
  /*add current user's displayname and email to db*/
 			if(!displayName){
@@ -111,14 +121,14 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 /*end user's posts iteration*/
 			
 			
-
+			
 		
 		} else {
 			console.log("Signed Out");
 			$scope.jason = null;
 		};
 /*end add current user's username and email to database*/
-		$scope.user = user;
+		
 		
 		});
 /*end listen to client's auth state*/

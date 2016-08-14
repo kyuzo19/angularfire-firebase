@@ -26,16 +26,19 @@
 		</div>
 <!--recent posts-->
 		<div ng-hide="recentPost">
-			<h4>Most Recent Post</h4>
+			<h4>Most Recent Post <span class="badge">{{totalPosts}}</span></h4>
 			<hr>
-			<div ng-repeat="post in posts">
+			<div ng-repeat="post in postsPager.currentPage">
 				<h2>{{post.title}}</h2>
 				<h5><span class="glyphicon glyphicon-time"></span> Posted by: {{post.author}}</h5>
-				<h5><span class="label  label-success">Upvote</span> <span class="label label-danger">Downvote</span></h5>
+				<h5><span class="label  label-success">positive</span> <span class="label label-danger">negative</span></h5>
 				<p>{{post.body}}</p>
 				<hr>
-				
 			</div>
+			<ul class="pager">
+				<li><a ng-click="postsPager.prevPage()" ng-hide="postsPager.disablePrev">Previous</a></li>
+				<li><a ng-click="postsPager.nextPage()">Next</a></li>
+			</ul>
 		</div>
 <!--my posts-->
 		<div ng-show="myPosts">
