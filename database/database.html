@@ -26,7 +26,7 @@
 		</div>
 <!--recent posts-->
 		<div ng-hide="recentPost">
-			<h4>Most Recent Post <span class="badge">{{totalPosts}}</span></h4>
+			<h4>Most Recent Post <span class="badge">{{posts.length}}</span></h4>
 			<hr>
 			<div ng-repeat="post in postsPager.currentPage">
 				<h2>{{post.title}}</h2>
@@ -36,8 +36,8 @@
 				<hr>
 			</div>
 			<ul class="pager">
-				<li><a ng-click="postsPager.prevPage()" ng-hide="postsPager.disablePrev">Previous</a></li>
-				<li><a ng-click="postsPager.nextPage()">Next</a></li>
+				<li><a ng-click="postsPager.prevPage()" ng-show="postsPager.prev">Previous</a></li>
+				<li><a ng-click="postsPager.nextPage()" ng-show="postsPager.next">Next</a></li>
 			</ul>
 		</div>
 <!--my posts-->

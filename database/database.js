@@ -1,6 +1,10 @@
 angular.module("database", [])
 .controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", function($scope, $firebaseArray, $firebaseObject){
-	
+		$scope.postsPager = {};
+	var postsPager = $scope.postsPager;
+	postsPager.currentPage = [];
+	postsPager.offset = 0;
+	postsPager.pageSize = 5;
 	$scope.submitPost = function(){
 /*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
@@ -10,6 +14,8 @@ angular.module("database", [])
 			uid: $scope.currentUserId,
 			author: $scope.author
 		}).then(function(ref){
+            
+            pageResult();
 /*add or write user's post to database*/
 			$scope.posts.$loaded().then(function(arr){
 				if (arr.length < 5){
@@ -56,6 +62,8 @@ angular.module("database", [])
 	}
 	
 	$scope.deletePost = function(key){
+       
+        
 /*delete from user's post*/
 		delete $scope.userposts[key];
 		$scope.userposts.$save();
@@ -65,42 +73,45 @@ angular.module("database", [])
 			console.log("remove successful")
 		});
 		$scope.posts.$loaded().then(function(arr){
-				if (arr.length < 5){
-					$scope.posts5 = arr;
-				} else {
-					$scope.posts5 = arr.slice((arr.length - 5), arr.length);
-				}
-				$scope.totalPosts = arr.length;
-				console.log(arr.length);
+				$scope.posts.length = arr.length;
+				console.log("at loadeded "+arr.length);
+				pageResult();
 			}).catch(function(err){
 				console.log(err);
 			});
+		
+		
 	};
 	
 	/*for pager set up*/
-	$scope.postsPager = {};
-	var postsPager = $scope.postsPager;
-	postsPager.currentPage = [];
-	postsPager.offset = 0;
-	postsPager.pageSize = 5;
+
 	
 		
 	
 	 function pageResult() {
-		postsPager.currentPage = $scope.posts.slice(0 + postsPager.offset, postsPager.pageSize + postsPager.offset);
+		 console.log("length: " + $scope.posts.length);
+		postsPager.currentPage = $scope.posts.slice(postsPager.offset, postsPager.pageSize + postsPager.offset);
+         postsPager.next = 1;
+		 postsPager.prev = 1;
+         if (postsPager.offset <= 0){
+             postsPager.prev = 0;
+             
+         } if ($scope.posts.length <= postsPager.offset + 5) {
+             postsPager.next = 0;
+         };
+         console.log("length: " + $scope.posts.length);
+         console.log("offset: " + postsPager.offset);
 	};
 
 	$scope.postsPager.nextPage = function (){
+        
 		postsPager.offset += postsPager.pageSize;
-		postsPager.disablePrev = false;
 		pageResult();
 	};
 	
 	$scope.postsPager.prevPage = function (){
-		if (postsPager.offset === postsPager.pageSize){
-				postsPager.disablePrev = true;
-		}
-		postsPager.offset -= postsPager.pageSize;
+        
+	   postsPager.offset -= postsPager.pageSize;
 		pageResult();
 	};
 	
