@@ -1,4 +1,4 @@
-angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "database", "firebase"])
+angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", "facebookSignin", "twitterSignin", "githubSignin", "database", "firebase", "storage"])
 .config(function(){
 	// Initialize Firebase
   	var config = {
@@ -38,6 +38,10 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 		.when("/database", {
 			templateUrl: "/database/database.html",
 			controller: "dataCtrl"
+		})
+		.when("/storage", {
+			templateUrl: "/storage/storage.html",
+			controller: "strCtrl"
 		})
 }])
 .controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "$firebaseAuth", function($scope, $firebaseObject, $firebaseArray, $firebaseAuth){

@@ -80,7 +80,7 @@ angular.module("database", [])
 				console.log(err);
 			});
 		
-		
+		postsPager.offset = 0;
 	};
 	
 	/*for pager set up*/
