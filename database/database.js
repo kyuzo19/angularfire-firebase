@@ -1,12 +1,12 @@
 angular.module("database", [])
 .controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", function($scope, $firebaseArray, $firebaseObject){
-		$scope.postsPager = {};
+	$scope.postsPager = {};
 	var postsPager = $scope.postsPager;
 	postsPager.currentPage = [];
 	postsPager.offset = 0;
 	postsPager.pageSize = 5;
 	$scope.submitPost = function(){
-/*add post and user's post to database*/
+		/*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
 		$scope.posts.$add({
 			title: $scope.title,
@@ -14,20 +14,8 @@ angular.module("database", [])
 			uid: $scope.currentUserId,
 			author: $scope.author
 		}).then(function(ref){
-            
             pageResult();
-/*add or write user's post to database*/
-			$scope.posts.$loaded().then(function(arr){
-				if (arr.length < 5){
-					$scope.posts5 = arr;
-				} else {
-					$scope.posts5 = arr.slice((arr.length - 5), arr.length);
-				}
-				$scope.totalPosts = arr.length;
-				console.log(arr.length);
-			}).catch(function(err){
-				console.log(err);
-			});
+			/*add or write user's post to database*/
 			var userPostsRef = firebase.database().ref("user-posts/" + $scope.currentUserId + "/" + ref.key)
 			var userPosts = $firebaseObject(userPostsRef);
 			$scope.userPosts = userPosts;
@@ -41,9 +29,9 @@ angular.module("database", [])
 			}).catch(function(err){
 				console.log(err)
 			});
-/*end add user's post to database*/		
+			/*end add user's post to database*/		
 		});
-/*end add post and user's post to database*/
+		/*end add post and user's post to database*/
 	};
 	
 	$scope.recentPosts = function(){
@@ -61,9 +49,7 @@ angular.module("database", [])
 		$scope.myPosts = 0; 
 	}
 	
-	$scope.deletePost = function(key){
-       
-        
+	$scope.deletePost = function(key){        
 /*delete from user's post*/
 		delete $scope.userposts[key];
 		$scope.userposts.$save();
@@ -84,10 +70,6 @@ angular.module("database", [])
 	};
 	
 	/*for pager set up*/
-
-	
-		
-	
 	 function pageResult() {
 		 console.log("length: " + $scope.posts.length);
 		postsPager.currentPage = $scope.posts.slice(postsPager.offset, postsPager.pageSize + postsPager.offset);
@@ -95,8 +77,8 @@ angular.module("database", [])
 		 postsPager.prev = 1;
          if (postsPager.offset <= 0){
              postsPager.prev = 0;
-             
-         } if ($scope.posts.length <= postsPager.offset + 5) {
+         }; 
+		 if ($scope.posts.length <= postsPager.offset + 5) {
              postsPager.next = 0;
          };
          console.log("length: " + $scope.posts.length);

@@ -45,64 +45,39 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 		})
 }])
 .controller("fireCtrl", ["$scope", "$firebaseObject", "$firebaseArray", "$firebaseAuth", function($scope, $firebaseObject, $firebaseArray, $firebaseAuth){
-   
 	$scope.authFire = $firebaseAuth();
 /*listen to client's auth state*/
 	$firebaseAuth().$onAuthStateChanged(function(user){
 		$scope.user = user;
-/*if user is authenticated*/
+	/*if user is authenticated*/
 		if(user){
-/*authenticated user's details*/
-			var displayName = user.displayName;
-			var email = user.email
-			var emailVerified = user.emailVerified;
-			var isAnonymous = user.isAnonymous;
-			var photoUrl = user.photoUrl;
-			var providerData = user.providerData;
-			var providerId = user.providerId;
-			var uid = user.uid;
+			/*authenticated user's details*/
+			var data = {};
+			data.displayName = user.displayName;
+			data.email = user.email
+			data.emailVerified = user.emailVerified;
+			data.isAnonymous = user.isAnonymous;
+			data.photoUrl = user.photoUrl;
+			data.providerData = user.providerData;
+			data.providerId = user.providerId;
+			data.uid = user.uid;
 			/*author*/
 			$scope.author =  user.providerData[0].displayName;
-			console.log("onauthchanged user id: " + user.uid);
-			$scope.jason = JSON.stringify({
-				userdisplayname: displayName,
-				useremail: email,
-				useremailverified: emailVerified,
-				useranonymous: isAnonymous,
-				userphotourl: photoUrl,
-				userproviderdata: providerData,
-				userproviderid: providerId,
-				userid: uid
-			});
-/*end authenticated user's details*/
+			$scope.jason = JSON.stringify(data);
+			/*end authenticated user's details*/
             var currentUserId = firebase.auth().currentUser.uid;
             $scope.currentUserId = currentUserId;
             var postRef = firebase.database().ref("posts");
             var userIdRef = firebase.database().ref("users/" + currentUserId);
             var posts = $firebaseArray(postRef);
 			var userDetails = $firebaseObject(userIdRef);
-			posts.$loaded().then(function(arr){
-				if (arr.length < 5){
-					$scope.posts5 = arr;
-				} else {
-					$scope.posts5 = arr.slice((arr.length - 5), arr.length);
-				};
-				$scope.totalPosts = arr.length;
-				console.log(arr.length);
-			}).catch(function(err){
-				console.log(err);
-			});
-			
 			$scope.posts = posts;
-			
-			
-			$scope.userDetails = userDetails;
  /*add current user's displayname and email to db*/
-			if(!displayName){
-				displayName = "No displayname or username";	
+			if(!data.displayName){
+				data.displayName = "No displayname or username";	
 			};
-			userDetails.username = displayName;
-			userDetails.email = email;
+			userDetails.username = data.displayName;
+			userDetails.email = data.email;
 			userDetails.$save().then(function(ref){
 				console.log("user id added to database: " + ref.key);
 			}, function(err){

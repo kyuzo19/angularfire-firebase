@@ -6,7 +6,7 @@ angular.module("storage",[])
 	function upload(evt) {
 		evt.stopPropagation();
       evt.preventDefault();
-      var file = evt.target.files[0];
+      var file = evt.target.files;
 
       var metadata = {
         'contentType': file.type
