@@ -97,10 +97,7 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 			});			
 /*End of Iteration*/
 			$scope.userposts = userposts;
-/*end user's posts iteration*/
-			
-			
-			
+/*end user's posts iteration*/	
 		
 		} else {
 			console.log("Signed Out");

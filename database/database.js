@@ -86,19 +86,13 @@ angular.module("database", [])
 	};
 
 	$scope.postsPager.nextPage = function (){
-        
 		postsPager.offset += postsPager.pageSize;
 		pageResult();
 	};
-	
-	$scope.postsPager.prevPage = function (){
-        
-	   postsPager.offset -= postsPager.pageSize;
+	$scope.postsPager.prevPage = function (){ 
+	   	postsPager.offset -= postsPager.pageSize;
 		pageResult();
 	};
-	
-	
-	
-	
+		
 }]);
 	
