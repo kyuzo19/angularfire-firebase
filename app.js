@@ -86,19 +86,8 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 					
 /*read user's posts reference iteration*/
 			var userposts = $firebaseObject(firebase.database().ref("user-posts/" + firebase.auth().currentUser.uid));
-			userposts.$loaded().then(function(userposts){
-				console.log("loaded record: " + userposts.$id, userposts.title);
-				});			
-/*Iteration through userposts Object $firebaseObject*/
-			angular.forEach(userposts, function(value, key) {
-          		console.log("key:" + key);
-				console.log("value title:" + value.title);
-				console.log("value message:" + value.message);
-			});			
-/*End of Iteration*/
 			$scope.userposts = userposts;
-/*end user's posts iteration*/	
-		
+
 		} else {
 			console.log("Signed Out");
 			$scope.jason = null;

@@ -8,11 +8,13 @@ angular.module("database", [])
 	$scope.submitPost = function(){
 		/*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
+
 		$scope.posts.$add({
 			title: $scope.title,
 			body: $scope.message,
 			uid: $scope.currentUserId,
-			author: $scope.author
+			author: $scope.author,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
 		}).then(function(ref){
             pageResult();
 			/*add or write user's post to database*/
@@ -21,6 +23,7 @@ angular.module("database", [])
 			$scope.userPosts = userPosts;
 			userPosts.title = $scope.title;
 			userPosts.message = $scope.message;
+            userPosts.timestamp = firebase.database.ServerValue.TIMESTAMP;
 			userPosts.$save().then(function(ref){
 				console.log("added post to user success")
 				$scope.title = "";
