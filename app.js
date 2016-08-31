@@ -9,6 +9,16 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
   	};
   	firebase.initializeApp(config);
 })
+.directive("listPost", function () {
+    return {
+        restrict: "E",
+        templateUrl: "database/posts.html",
+        scope: {
+			post: "="
+		}
+    };
+    
+})
 .config(["$routeProvider", function($routeProvider){
 	$routeProvider
 		.when("/anonym", {
