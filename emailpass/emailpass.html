@@ -1,20 +1,9 @@
-<!--<form class="form-signin">
-	<h3 class="form-signin-heading">Firebase signin</h3>
-	<label for="email" >Email Address</label>
-	<input type="email" id="email" class="form-control" placeholder="Email address" required ng-model="email">
-	<label for="passowrd">Password</label>
-	<input type="password" id="password" class="form-control" placeholder="Password" required ng-model="password">
-	<hr>
-	<button class="btn btn-lg btn-block btn-primary">Sign-in</button>
-	<button class="btn btn-lg btn-primary btn-block"  ng-click="signUp()">Sign-up</button>
-	<button class="btn btn-lg btn-primary btn-block" >Password reset</button>
-</form>-->
-	<label for="email" >Email Address</label>
-	<input type="email" id="email" placeholder="Email address" required ng-model="email">
-	<label for="passowrd">Password</label>
-	<input type="password" id="password"  placeholder="Password"  ng-model="password">
-	<hr>
-	<button class="btn btn-lg  btn-primary" ng-click="signIn()" ng-disabled="user">Sign-in</button>
-	<button class="btn btn-lg btn-primary" ng-click="signUp()" ng-disabled="user">Sign-up</button>
-	<button class="btn btn-lg btn-primary" ng-disabled="!user">Password Reset</button>
-	<button class="btn btn-lg btn-primary" ng-click="verifyEmail()" ng-disabled="!user">Verify email</button>
+<label for="email" >Email Address</label>
+<input type="email" id="email" placeholder="Email address" required ng-model="email">
+<label for="passowrd">Password</label>
+<input type="password" id="password"  placeholder="Password"  ng-model="password">
+<hr>
+<button class="btn btn-lg  btn-primary" ng-click="signIn()" ng-disabled="user">Sign-in</button>
+<button class="btn btn-lg btn-primary" ng-click="signUp()" ng-disabled="user">Sign-up</button>
+<button class="btn btn-lg btn-primary" ng-disabled="!user">Password Reset</button>
+<button class="btn btn-lg btn-primary" ng-click="verifyEmail()" ng-disabled="!user">Verify email</button>

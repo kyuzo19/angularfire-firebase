@@ -51,9 +51,8 @@ angular.module("database", [])
 		$scope.postForm = $scope.recentPost = 1;
 		$scope.myPosts = 0; 
 	}
-	
-	$scope.deletePost = function(key){        
-/*delete from user's post*/
+	$scope.deletePost = function (key) {
+	/*delete from user's post*/
 		delete $scope.userposts[key];
 		$scope.userposts.$save();
 /*delete from posts*/
@@ -70,8 +69,9 @@ angular.module("database", [])
 			});
 		
 		postsPager.offset = 0;
-	};
 	
+	};
+
 	/*for pager set up*/
 	 function pageResult() {
 		 console.log("length: " + $scope.posts.length);

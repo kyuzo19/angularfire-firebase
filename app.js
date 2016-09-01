@@ -11,13 +11,27 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 })
 .directive("listPost", function () {
     return {
-        restrict: "E",
+        restrict: "AE",
         templateUrl: "database/posts.html",
         scope: {
 			post: "="
 		}
     };
     
+})
+.directive("submitForm", function () {
+	return {
+		restrict: "AE",
+		templateUrl: "database/submitform",
+		scope: false
+	};
+})
+.directive("userPost", function () {
+	return {
+		restrict: "AE",
+		templateUrl: "database/userposts.html",
+		scope: false
+	};
 })
 .config(["$routeProvider", function($routeProvider){
 	$routeProvider
