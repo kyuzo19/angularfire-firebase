@@ -1,22 +1,30 @@
 angular.module("database", [])
-.controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", "dataFire", function($scope, $firebaseArray, $firebaseObject, dataFire){
-	var post = $firebaseArray(dataFire.postRef);
-	$scope.post = post;
+.controller("dataCtrl", ["$scope", "$firebaseArray", "$firebaseObject", function($scope, $firebaseArray, $firebaseObject){
+	$scope.postsPager = {};
+	var postsPager = $scope.postsPager;
+	postsPager.currentPage = [];
+	postsPager.offset = 0;
+	postsPager.pageSize = 5;
 	$scope.submitPost = function(){
-/*add post and user's post to database*/
+		/*add post and user's post to database*/
 		$scope.postForm = $scope.recentPost = 0;
-		post.$add({
+
+		$scope.posts.$add({
 			title: $scope.title,
 			body: $scope.message,
-			uid: $scope.userid,
-			author: $scope.author
+			uid: $scope.currentUserId,
+			author: $scope.author,
+            timestamp: firebase.database.ServerValue.TIMESTAMP
 		}).then(function(ref){
-/*add user's post to database*/
-			console.log("added post successfull" );
-			var postUser = $firebaseObject(dataFire.userPostRef($scope.userid, ref.key));
-			postUser.title = $scope.title;
-			postUser.message = $scope.message;
-			postUser.$save().then(function(ref){
+            pageResult();
+			/*add or write user's post to database*/
+			var userPostsRef = firebase.database().ref("user-posts/" + $scope.currentUserId + "/" + ref.key)
+			var userPosts = $firebaseObject(userPostsRef);
+			$scope.userPosts = userPosts;
+			userPosts.title = $scope.title;
+			userPosts.message = $scope.message;
+            userPosts.timestamp = firebase.database.ServerValue.TIMESTAMP;
+			userPosts.$save().then(function(ref){
 				console.log("added post to user success")
 				$scope.title = "";
 				$scope.message = "";
@@ -24,12 +32,13 @@ angular.module("database", [])
 			}).catch(function(err){
 				console.log(err)
 			});
-/*end add user's post to database*/		
+			/*end add user's post to database*/		
 		});
-/*end add post and user's post to database*/
+		/*end add post and user's post to database*/
 	};
 	
 	$scope.recentPosts = function(){
+		pageResult();
 		$scope.postForm = $scope.recentPost = $scope.myPosts = 0;
 	};
 	
@@ -42,15 +51,51 @@ angular.module("database", [])
 		$scope.postForm = $scope.recentPost = 1;
 		$scope.myPosts = 0; 
 	}
-	
-	$scope.deletePost = function(key){
-		
+	$scope.deletePost = function (key) {
+	/*delete from user's post*/
 		delete $scope.userposts[key];
 		$scope.userposts.$save();
-		var ind = $scope.post.$indexFor(key);
-		$scope.post.$remove(ind).then(function(ref){
+/*delete from posts*/
+		var ind = $scope.posts.$indexFor(key);
+		$scope.posts.$remove(ind).then(function(ref){
 			console.log("remove successful")
-		})
-	}
+		});
+		$scope.posts.$loaded().then(function(arr){
+				$scope.posts.length = arr.length;
+				console.log("at loadeded "+arr.length);
+				pageResult();
+			}).catch(function(err){
+				console.log(err);
+			});
+		
+		postsPager.offset = 0;
+	
+	};
+
+	/*for pager set up*/
+	 function pageResult() {
+		 console.log("length: " + $scope.posts.length);
+		postsPager.currentPage = $scope.posts.slice(postsPager.offset, postsPager.pageSize + postsPager.offset);
+         postsPager.next = 1;
+		 postsPager.prev = 1;
+         if (postsPager.offset <= 0){
+             postsPager.prev = 0;
+         }; 
+		 if ($scope.posts.length <= postsPager.offset + 5) {
+             postsPager.next = 0;
+         };
+         console.log("length: " + $scope.posts.length);
+         console.log("offset: " + postsPager.offset);
+	};
+
+	$scope.postsPager.nextPage = function (){
+		postsPager.offset += postsPager.pageSize;
+		pageResult();
+	};
+	$scope.postsPager.prevPage = function (){ 
+	   	postsPager.offset -= postsPager.pageSize;
+		pageResult();
+	};
+		
 }]);
 	

@@ -1,0 +1,6 @@
+<h3>{{userpost.title}}</h3>
+<h5><span class="glyphicon glyphicon-time"></span>{{userpost.timestamp | date: 'short'}}</h5>
+<p>{{userpost.message}}</p>
+<button class="btn btn-danger" ng-click="deletePost(key)">Delete</button>
+<p>post key:{{key}}</p>
+<hr>
