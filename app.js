@@ -22,7 +22,7 @@ angular.module("fireApp",["ngRoute", "anonSignin", "empSignin", "googleSignin", 
 .directive("submitForm", function () {
 	return {
 		restrict: "AE",
-		templateUrl: "database/submitform",
+		templateUrl: "database/submitform.html",
 		scope: false
 	};
 })
